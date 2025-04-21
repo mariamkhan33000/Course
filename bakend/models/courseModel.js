@@ -27,6 +27,15 @@ const courseSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    createrId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Admin",
+        required: true,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const Course = mongoose.model("Course", courseSchema);

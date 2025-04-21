@@ -2,6 +2,7 @@ import express from 'express'
 import connectDB from './config/db.js'
 import fileUpload from 'express-fileupload'
 import courseRoute from './routes/courseRoute.js'
+import adminRoute from './routes/adminRoute.js'
 import userRoute from './routes/userRoutes.js'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
@@ -22,6 +23,7 @@ app.use(fileUpload({
 
 app.use('/api/v1/course', courseRoute)
 app.use('/api/v1/user', userRoute)
+app.use('/api/v1/admin', adminRoute)
 
 app.listen(port, () => {
     console.log(`Server is running on Port ${port} Successfully . . . . . `)

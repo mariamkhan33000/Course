@@ -3,6 +3,7 @@ import Course from "../models/courseModel.js";
 import Purchase from "../models/purchaseModels.js";
 
 export const createCourse = async (req, res) => {
+    const adminId = req.adminId;
     try {
         const { title, description, price } = req.body;
         if (!title || !description || !price) {
@@ -30,7 +31,7 @@ export const createCourse = async (req, res) => {
             return res.status(500).json({ message: "Cloudinary upload failed" });
         }
 
-
+        createrId = adminId;
         const course = await Course.create({
             title,
             description,
@@ -48,11 +49,18 @@ export const createCourse = async (req, res) => {
 }
 
 export const updateCourse = async (req, res) => {
+    const adminId = req.adminId;
     const { courseId } = req.params;
     const { title, description, price } = req.body;
     try {
+        const courseSearch = await Course.findById(courseId);
+        if (!courseSearch) {
+            return res.status(404).json({ message: "Course not found" });
+        }
         const course = await Course.updateOne(
-            { _id: courseId },
+            { _id: courseId,
+                createrId: adminId
+             },
             {
                 title,
                 description,
@@ -72,9 +80,13 @@ export const updateCourse = async (req, res) => {
 }
 
 export const deleteCourse = async (req, res) => {
+    const adminId = req.adminId;
     try {
         const courseId = req.params;
-        const course = await Course.findByIdAndDelete(courseId);
+        const course = await Course.findByIdAndDelete({
+            _id : courseId,
+            createrId: adminId
+        });
         if(!course) {
             return res.status(404).json({ message: "Course not found" });
         }
